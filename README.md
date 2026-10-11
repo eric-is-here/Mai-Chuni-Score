@@ -1,4 +1,4 @@
-# Mai Score
+# Mai Chuni Score
 
 Mai Score is a fully static website for searching **maimai International** songs and exact chart constants. It also supports continuous live-camera OCR for recognizing song titles.
 
