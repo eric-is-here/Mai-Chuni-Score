@@ -1,5 +1,7 @@
 # Mai Chuni Score
 
+[English](README.md) · [繁體中文](README.zh-TW.md)
+
 Mai Score is a fully static website for searching **maimai International** songs and exact chart constants. It also supports continuous live-camera OCR for recognizing song titles.
 
 **Live site:** <https://eric-is-here.github.io/Mai-Score/>
@@ -19,7 +21,7 @@ Mai Score is a fully static website for searching **maimai International** songs
 
 - Source: [ArcadeSongs maimai](https://arcade-songs.zetaraku.dev/maimai/)
 - Region: International
-- Dataset update time in Hong Kong time: `2026-10-05 02:46:46` (`Asia/Hong_Kong`)
+- Dataset update time in Hong Kong time: `2026-10-09 09:57:42` (`Asia/Hong_Kong`)
 - Songs: `1,491`
 - Charts: `6,128`
 - Genres: `7`
@@ -42,7 +44,11 @@ Genres are kept in their official English/Japanese form:
 |---|---|
 | `index.html` | Complete single-file application: HTML, CSS, JavaScript, and embedded dataset |
 | `maidata.js` | Standalone JavaScript dataset used as the source for the embedded data |
-| `README.md` | Technical and usage documentation |
+| `.scripts/refresh-data.mjs` | Downloads and regenerates the ArcadeSongs maimai dataset |
+| `.scripts/verify-refresh.mjs` | Validates the generated dataset and embedded HTML copy |
+| `.github/workflows/refresh-data.yml` | Scheduled GitHub Actions workflow for automatic dataset updates |
+| `README.md` | English technical and usage documentation |
+| `README.zh-TW.md` | Traditional Chinese technical and usage documentation |
 
 The deployed site only requires `index.html`. `maidata.js` remains in the repository as a convenient, reusable copy of the dataset.
 
@@ -200,9 +206,9 @@ The scanner:
 5. Matches recognized text against the song database
 6. Shows the best match as an inline card under the camera
 7. Shows Standard chart levels first and DX chart levels beneath them
-7. Automatically updates when another song is recognized
-8. Keeps the last recognized result card until a different song is recognized
-9. Closes with the centered **關閉** button
+8. Automatically updates when another song is recognized
+9. Keeps the last recognized result card until a different song is recognized
+10. Closes with the centered **關閉** button
 
 ### Image Upload Mode
 
@@ -314,21 +320,33 @@ Current Pages configuration:
 
 Any push to `main` triggers a new GitHub Pages deployment.
 
-## Data Refresh
+## Automatic Data Refresh
 
-The current data snapshot is embedded in `index.html`. To update it:
+The dataset refreshes through the `Refresh song data` GitHub Actions workflow:
 
-1. Download the newest ArcadeSongs maimai International `data.json`
-2. Filter songs/charts to the desired region
-3. Regenerate the embedded `const maidata = ...` block in `index.html`
-4. Commit and push to `main`
+1. Runs daily at 10:00 Hong Kong time (`02:00 UTC`)
+2. Downloads the current ArcadeSongs maimai International dataset
+3. Filters to International songs and charts
+4. Regenerates the embedded dataset in `index.html` and the standalone copy in `maidata.js`
+5. Validates the dataset metadata, chart types, embedded/standalone consistency, and inline JavaScript syntax
+6. Commits and pushes `index.html` and `maidata.js` only when the data has changed
+7. Triggers a new GitHub Pages deployment through the push to `main`
+
+The workflow can also be run manually from the repository Actions tab using the `workflow_dispatch` trigger.
+
+To refresh the dataset locally, run:
+
+```powershell
+node .scripts/refresh-data.mjs
+node .scripts/verify-refresh.mjs
+```
 
 ## Known Limitations
 
 - OCR accuracy depends on lighting, camera focus, font, and screen glare.
 - Song covers require internet access and availability of the ArcadeSongs CDN.
 - Live OCR may be slow on low-power devices because recognition is CPU-intensive.
-- The dataset is a snapshot and does not automatically update itself.
+- The dataset refreshes automatically once per day through the scheduled GitHub Actions workflow.
 - Some official source data may include null chart versions or note counts.
 
 ## Data and Attribution
