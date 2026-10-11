@@ -1,34 +1,34 @@
-# Mai Chuni Score
+# Mai Score
 
-[English](README.md) · [繁體中文](README.zh-TW.md)
+[繁體中文](README.md) · [English](README.en.md)
 
-Mai Score is a fully static website for searching **maimai International** songs and exact chart constants. It also supports continuous live-camera OCR for recognizing song titles.
+Mai Score 是一個完全靜態網站，用於搜尋 **maimai 國際版**歌曲與精確譜面定數，並支援連續鏡頭 OCR 辨識歌名。
 
-**Live site:** <https://eric-is-here.github.io/Mai-Score/>
+**線上網站：** <https://eric-is-here.github.io/Mai-Score/>
 
-## Features
+## 功能
 
-- Search songs by title, artist, genre, or version
-- Filter by genre, version, chart type, difficulty, and exact constant
-- Show all Standard/DX charts with exact internal constants
-- Show chart version and note counts
-- Search-result cards use official cover art as full-card backgrounds
-- Live-camera OCR with continuous scanning and an inline matched-song card
-- Optional image upload for offline OCR recognition
-- Fully static deployment; no backend, database, or account required
+- 依歌名、藝術家、分類或版本搜尋歌曲
+- 依分類、版本、譜面類型、難度與精確定數篩選
+- 顯示所有 Standard／DX 譜面的精確內部定數
+- 顯示譜面版本與音符數
+- 搜尋結果卡片使用官方封面作為整卡背景
+- 連續鏡頭 OCR 掃描，並即時顯示符合歌曲的卡片
+- 支援圖片上傳辨識
+- 完全靜態部署；不需後端、資料庫或帳戶
 
-## Current Dataset
+## 目前資料集
 
-- Source: [ArcadeSongs maimai](https://arcade-songs.zetaraku.dev/maimai/)
-- Region: International
-- Dataset update time in Hong Kong time: `2026-10-09 09:57:42` (`Asia/Hong_Kong`)
-- Songs: `1,491`
-- Charts: `6,128`
-- Genres: `7`
-- Versions: `28`
-- Distinct exact constants: `87`, from `1.0` to `15.0`
+- 來源：[ArcadeSongs maimai](https://arcade-songs.zetaraku.dev/maimai/)
+- 地區：國際版
+- 資料更新時間（香港時間）：`2026-10-09 09:57:42`
+- 歌曲數：`1,491`
+- 譜面數：`6,128`
+- 分類數：`7`
+- 版本數：`28`
+- 精確定數種類：`87`，範圍 `1.0` 至 `15.0`
 
-Genres are kept in their official English/Japanese form:
+分類保留官方英文／日文名稱：
 
 - `maimai`
 - `POPS＆アニメ`
@@ -38,37 +38,37 @@ Genres are kept in their official English/Japanese form:
 - `オンゲキ＆CHUNITHM`
 - `宴会場`
 
-## Files
+## 檔案
 
-| File | Purpose |
+| 檔案 | 用途 |
 |---|---|
-| `index.html` | Complete single-file application: HTML, CSS, JavaScript, and embedded dataset |
-| `maidata.js` | Standalone JavaScript dataset used as the source for the embedded data |
-| `.scripts/refresh-data.mjs` | Downloads and regenerates the ArcadeSongs maimai dataset |
-| `.scripts/verify-refresh.mjs` | Validates the generated dataset and embedded HTML copy |
-| `.github/workflows/refresh-data.yml` | Scheduled GitHub Actions workflow for automatic dataset updates |
-| `README.md` | English technical and usage documentation |
-| `README.zh-TW.md` | Traditional Chinese technical and usage documentation |
+| `index.html` | 完整單檔應用程式：HTML、CSS、JavaScript 與內嵌資料集 |
+| `maidata.js` | 獨立 JavaScript 資料集，作為內嵌資料來源 |
+| `.scripts/refresh-data.mjs` | 下載並重新產生 ArcadeSongs maimai 資料集 |
+| `.scripts/verify-refresh.mjs` | 驗證產生的資料集與內嵌 HTML 版本 |
+| `.github/workflows/refresh-data.yml` | 每日自動更新資料集的 GitHub Actions 工作流程 |
+| `README.md` | 繁體中文主要技術與使用說明文件 |
+| `README.en.md` | 英文技術與使用說明文件 |
 
-The deployed site only requires `index.html`. `maidata.js` remains in the repository as a convenient, reusable copy of the dataset.
+部署網站只需要 `index.html`。`maidata.js` 保留在儲存庫中，方便重複使用資料集。
 
-## Architecture
+## 架構
 
-The application is intentionally dependency-light at runtime:
+應用程式在執行階段刻意保持低相依性：
 
-- No frontend framework
-- No build step
-- No backend
-- No database
-- No server-side processing
-- One external JavaScript runtime library: Tesseract.js
-- Official cover images are loaded directly from ArcadeSongs' public CDN
+- 不使用前端框架
+- 沒有建置步驟
+- 沒有後端
+- 沒有資料庫
+- 沒有伺服器端處理
+- 只有一個外部 JavaScript 執行階段函式庫：Tesseract.js
+- 官方封面圖直接從 ArcadeSongs 公開 CDN 載入
 
-The complete application is embedded in `index.html`, which removes cache-coherence issues between HTML, CSS, JavaScript, and data updates.
+完整應用程式內嵌在 `index.html` 中，可避免 HTML、CSS、JavaScript 與資料更新之間的快取一致性問題。
 
-## Song Data Schema
+## 歌曲資料結構
 
-Each song contains:
+每首歌曲包含：
 
 ```json
 {
@@ -83,7 +83,7 @@ Each song contains:
 }
 ```
 
-Each sheet/chart contains:
+每張譜面包含：
 
 ```json
 {
@@ -105,11 +105,11 @@ Each sheet/chart contains:
 }
 ```
 
-## Exact Chart Constants
+## 精確譜面定數
 
-Mai Score displays **exact internal constants**, not nominal level mappings.
+Mai Score 顯示**精確內部定數**，而不是名義等級對應值。
 
-The precedence is:
+優先順序為：
 
 ```js
 function exactLevel(chart) {
@@ -119,11 +119,11 @@ function exactLevel(chart) {
 }
 ```
 
-This matters because nominal `+` levels are not always `.6`, and non-plus levels are not always `.0`.
+這點很重要，因為名義 `+` 等級不一定是 `.6`，非 `+` 等級也不一定是 `.0`。
 
-Examples:
+範例：
 
-| Nominal level | Exact constant |
+| 名義等級 | 精確定數 |
 |---:|---:|
 | `6` | `7.5` |
 | `9+` | `9.8` |
@@ -131,11 +131,11 @@ Examples:
 | `12` | `12.4` |
 | `14+` | `14.8` |
 
-The level filter is built from `internalLevelValue` and includes exact values such as `7.1`, `9.8`, `13.8`, and `14.1`.
+等級篩選使用 `internalLevelValue` 建立，包含 `7.1`、`9.8`、`13.8`、`14.1` 等精確數值。
 
-## Version Ordering
+## 版本排序
 
-Versions are sorted by the earliest `releaseDate` among songs in each version:
+版本依每個版本中最早的歌曲 `releaseDate` 排序：
 
 ```js
 const firstDate = version => maidata.songs
@@ -144,48 +144,48 @@ const firstDate = version => maidata.songs
   .sort()[0];
 ```
 
-Alphabetical order is used only as a tie-breaker.
+只有在前述日期相同時，才使用字母順序作為次要排序條件。
 
-## Search and Filtering
+## 搜尋與篩選
 
-Search is case-insensitive and token-based. Every whitespace-separated query token must match the combined searchable text:
+搜尋不區分大小寫，並以空白分隔的多個關鍵字為單位。每個關鍵字都必須符合以下合併後的搜尋文字：
 
-- Song title
-- Artist
-- Genre/category
-- Version
+- 歌名
+- 藝術家
+- 分類
+- 版本
 
-Chart filters require at least one chart to satisfy all selected conditions:
+譜面篩選要求至少一張譜面同時符合所有選定條件：
 
-- Genre
-- Version
-- Chart type (`Standard` or `DX`)
-- Difficulty
-- Exact constant
+- 分類
+- 版本
+- 譜面類型（`Standard` 或 `DX`）
+- 難度
+- 精確定數
 
-## Cover Art
+## 封面圖
 
-Cover images are loaded on demand from:
+封面圖會依需從以下位置載入：
 
 ```text
 https://dp4p6x0xfi5o9.cloudfront.net/maimai/img/cover/{imageName}
 ```
 
-Cards use:
+卡片使用：
 
-- Full-card background image
+- 整卡背景圖
 - `object-fit: cover`
-- Dark gradient overlay for readable text
+- 深色漸層遮罩，確保文字可讀
 - `loading="lazy"`
 - `decoding="async"`
 
-No cover files are bundled in this repository.
+本儲存庫不會打包任何封面檔案。
 
-## OCR Implementation
+## OCR 實作
 
-### Live Camera Mode
+### 即時鏡頭模式
 
-Live OCR uses:
+即時 OCR 使用：
 
 ```js
 navigator.mediaDevices.getUserMedia({
@@ -197,50 +197,50 @@ navigator.mediaDevices.getUserMedia({
 });
 ```
 
-The scanner:
+掃描器會：
 
-1. Opens a rear/environment camera when available
-2. Continuously captures video frames to an offscreen canvas
-3. Runs OCR repeatedly without closing the camera
-4. Analyzes two shallow, wide crop regions focused on song titles
-5. Matches recognized text against the song database
-6. Shows the best match as an inline card under the camera
-7. Shows Standard chart levels first and DX chart levels beneath them
-8. Automatically updates when another song is recognized
-9. Keeps the last recognized result card until a different song is recognized
-10. Closes with the centered **關閉** button
+1. 優先開啟後置／環境鏡頭
+2. 持續將視訊畫面擷取到離屏 canvas
+3. 不關閉鏡頭，重複執行 OCR
+4. 分析兩個聚焦歌名的淺色寬裁切區域
+5. 將辨識文字與歌曲資料庫比對
+6. 在鏡頭下方顯示最佳符合結果
+7. 先顯示 Standard 譜面等級，再顯示 DX 譜面等級
+8. 辨識到其他歌曲時自動更新
+9. 在辨識到不同歌曲之前，保留上一個結果卡片
+10. 使用中央的 **關閉** 按鈕結束
 
-### Image Upload Mode
+### 圖片上傳模式
 
-Image upload mode is useful when live-camera OCR is unreliable.
+圖片上傳模式適合即時鏡頭 OCR 不穩定時使用。
 
-It:
+它會：
 
-1. Accepts a captured photo or screenshot
-2. Creates an `ImageBitmap`
-3. Runs the same two-crop title-focused OCR pipeline
-4. Shows up to five candidate songs
-5. Lets the user select the intended match
+1. 接受拍攝照片或螢幕截圖
+2. 建立 `ImageBitmap`
+3. 執行相同的兩個歌名裁切 OCR 流程
+4. 顯示最多五個候選歌曲
+5. 讓使用者選擇正確結果
 
-### OCR Engine
+### OCR 引擎
 
-OCR uses Tesseract.js:
+OCR 使用 Tesseract.js：
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
 ```
 
-Recognition languages:
+辨識語言：
 
 ```text
 jpn+eng
 ```
 
-The live scanner keeps one persistent Tesseract worker while scanning and terminates it when the scanner closes. Frames are captured at `960×540`, cropped to title regions before OCR, and recognition exits early after a high-confidence title match.
+即時掃描會在掃描期間保留一個持續存在的 Tesseract worker，並在掃描器關閉時終止它。畫面以 `960×540` 擷取，OCR 前先裁切至歌名區域；若已得到高信心歌名符合，辨識會提前結束。
 
-### Text Normalization
+### 文字正規化
 
-Recognized text is normalized before matching:
+辨識文字會先經過正規化再比對：
 
 ```js
 function normalizeText(value) {
@@ -250,31 +250,31 @@ function normalizeText(value) {
 }
 ```
 
-This preserves Unicode letters and numbers while removing spaces, punctuation, and symbols.
-The normalizer also maps common OCR-confused characters such as `ø` to `o`, `æ` to `ae`, `œ` to `oe`, and `ß` to `ss`.
+這會保留 Unicode 字母與數字，並移除空白、標點與符號。
+正規化也會將常見 OCR 混淆字元轉換，例如 `ø` 轉為 `o`、`æ` 轉為 `ae`、`œ` 轉為 `oe`、`ß` 轉為 `ss`。
 
-### Song Matching
+### 歌曲比對
 
-Matching supports:
+比對支援：
 
-- Exact normalized song title match
-- Song title substring match
-- Song title prefix match
-- Bounded Levenshtein distance
+- 正規化歌名完全相同
+- 歌名子字串符合
+- 歌名字首符合
+- 有上限的 Levenshtein 距離
 
-The title-only bounded threshold is:
+僅針對歌名的距離上限為：
 
 ```js
 Math.max(1, Math.floor(title.length * 0.15))
 ```
 
-A result is accepted only when its normalized score is at least `0.75`.
+只有正規化分數至少 `0.75` 的結果會被接受。
 
-For image upload mode, the top five accepted candidates are shown. Live mode uses the highest-confidence candidate.
+圖片上傳模式會顯示前五個可接受候選。即時模式使用信心度最高的候選。
 
-## Browser Requirements
+## 瀏覽器需求
 
-Mai Score requires a modern browser supporting:
+Mai Score 需要支援以下功能的現代瀏覽器：
 
 - ES2017+
 - `dialog`
@@ -283,75 +283,75 @@ Mai Score requires a modern browser supporting:
 - `MediaDevices.getUserMedia`
 - `AsyncFunction`
 
-Camera OCR additionally requires:
+鏡頭 OCR 另外需要：
 
-- A secure HTTPS context or localhost
-- Browser camera permission
-- A camera device
+- 安全的 HTTPS 環境或 localhost
+- 瀏覽器鏡頭權限
+- 可用鏡頭裝置
 
-## Local Development
+## 本機開發
 
-Because the site is a static single HTML file, it can be opened directly, but a local server is recommended for full functionality:
+因為網站是單一靜態 HTML 檔案，可直接開啟；但為了完整功能，建議使用本機伺服器：
 
 ```powershell
 python -m http.server 8000
 ```
 
-Then open:
+然後開啟：
 
 ```text
 http://localhost:8000
 ```
 
-## GitHub Pages Deployment
+## GitHub Pages 部署
 
-The site is deployed at:
+網站部署於：
 
 ```text
 https://eric-is-here.github.io/Mai-Score/
 ```
 
-Current Pages configuration:
+目前 Pages 設定：
 
-- Repository: `eric-is-here/Mai-Score`
-- Branch: `main`
-- Source path: `/ (root)`
-- Commit file: `index.html`
+- 儲存庫：`eric-is-here/Mai-Score`
+- 分支：`main`
+- 來源路徑：`/ (root)`
+- 提交檔案：`index.html`
 
-Any push to `main` triggers a new GitHub Pages deployment.
+任何推送到 `main` 的更新都會觸發新的 GitHub Pages 部署。
 
-## Automatic Data Refresh
+## 自動資料更新
 
-The dataset refreshes through the `Refresh song data` GitHub Actions workflow:
+資料集透過 `Refresh song data` GitHub Actions 工作流程更新：
 
-1. Runs daily at 10:00 Hong Kong time (`02:00 UTC`)
-2. Downloads the current ArcadeSongs maimai International dataset
-3. Filters to International songs and charts
-4. Regenerates the embedded dataset in `index.html` and the standalone copy in `maidata.js`
-5. Validates the dataset metadata, chart types, embedded/standalone consistency, and inline JavaScript syntax
-6. Commits and pushes `index.html` and `maidata.js` only when the data has changed
-7. Triggers a new GitHub Pages deployment through the push to `main`
+1. 每天香港時間 `10:00`（`02:00 UTC`）執行
+2. 下載最新的 ArcadeSongs maimai 國際版資料集
+3. 篩選國際版歌曲與譜面
+4. 重新產生 `index.html` 內嵌資料集，以及 `maidata.js` 獨立副本
+5. 驗證資料集 metadata、譜面類型、內嵌／獨立資料一致性與內嵌 JavaScript 語法
+6. 只有資料變更時，才提交並推送 `index.html` 與 `maidata.js`
+7. 推送到 `main` 後觸發新的 GitHub Pages 部署
 
-The workflow can also be run manually from the repository Actions tab using the `workflow_dispatch` trigger.
+你也可以在儲存庫的 **Actions** 頁面，使用 `workflow_dispatch` 手動執行工作流程。
 
-To refresh the dataset locally, run:
+若要在本機更新資料集，請執行：
 
 ```powershell
 node .scripts/refresh-data.mjs
 node .scripts/verify-refresh.mjs
 ```
 
-## Known Limitations
+## 已知限制
 
-- OCR accuracy depends on lighting, camera focus, font, and screen glare.
-- Song covers require internet access and availability of the ArcadeSongs CDN.
-- Live OCR may be slow on low-power devices because recognition is CPU-intensive.
-- The dataset refreshes automatically once per day through the scheduled GitHub Actions workflow.
-- Some official source data may include null chart versions or note counts.
+- OCR 準確度受光線、對焦、字體與螢幕反光影響。
+- 封面圖需要網路連線，且依賴 ArcadeSongs CDN 的可用性。
+- 即時 OCR 在低效能裝置上可能較慢，因為辨識需要大量 CPU 運算。
+- 資料集每天透過排程 GitHub Actions 工作流程自動更新。
+- 部分官方來源資料可能包含空的譜面版本或音符數。
 
-## Data and Attribution
+## 資料與出處
 
-- Song, chart, cover, and constant data: [ArcadeSongs maimai](https://arcade-songs.zetaraku.dev/maimai/)
-- OCR runtime: [Tesseract.js](https://tesseract.projectnaptha.com/)
-- The dataset and cover images belong to their respective sources and rights holders.
-- This project is intended for personal reference and educational use.
+- 歌曲、譜面、封面與定數資料：[ArcadeSongs maimai](https://arcade-songs.zetaraku.dev/maimai/)
+- OCR 執行階段：[Tesseract.js](https://tesseract.projectnaptha.com/)
+- 資料集與封面圖屬於各自來源與權利人。
+- 本專案僅供個人參考與教育用途。
