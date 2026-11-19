@@ -44,8 +44,8 @@ Genres are kept in their official English/Japanese form:
 |---|---|
 | `index.html` | Complete single-file application: HTML, CSS, JavaScript, and embedded dataset |
 | `maidata.js` | Standalone JavaScript dataset used as the source for the embedded data |
-| `.scripts/refresh-data.mjs` | Downloads and regenerates the ArcadeSongs maimai dataset |
-| `.scripts/verify-refresh.mjs` | Validates the generated dataset and embedded HTML copy |
+| `.scripts/refresh-data.mjs` | Downloads and regenerates the ArcadeSongs maimai and CHUNITHM datasets |
+| `.scripts/verify-refresh.mjs` | Validates both generated datasets and their embedded HTML copies |
 | `.github/workflows/refresh-data.yml` | Scheduled GitHub Actions workflow for automatic dataset updates |
 | `README.md` | Primary Traditional Chinese technical and usage documentation |
 | `README.en.md` | English technical and usage documentation |
@@ -322,15 +322,17 @@ Any push to `main` triggers a new GitHub Pages deployment.
 
 ## Automatic Data Refresh
 
-The dataset refreshes through the `Refresh song data` GitHub Actions workflow:
+The `Refresh song data` GitHub Actions workflow checks both games for updates:
 
 1. Runs daily at 10:00 Hong Kong time (`02:00 UTC`)
-2. Downloads the current ArcadeSongs maimai International dataset
+2. Downloads the current ArcadeSongs data for maimai and CHUNITHM
 3. Filters to International songs and charts
-4. Regenerates the embedded dataset in `index.html` and the standalone copy in `maidata.js`
+4. Regenerates the embedded dataset and standalone JavaScript copy for each game
 5. Validates the dataset metadata, chart types, embedded/standalone consistency, and inline JavaScript syntax
-6. Commits and pushes `index.html` and `maidata.js` only when the data has changed
-7. Triggers a new GitHub Pages deployment through the push to `main`
+6. Commits and pushes the generated files only when the data has changed
+7. Requests a GitHub Pages build when the refreshed branch is the Pages source
+
+Scheduled workflows run from the GitHub default branch. Use that branch as the Pages source so scheduled refreshes update the published site. The dates shown on the site come from ArcadeSongs and advance when the source publishes new data.
 
 The workflow can also be run manually from the repository Actions tab using the `workflow_dispatch` trigger.
 

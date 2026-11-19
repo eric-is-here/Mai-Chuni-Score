@@ -44,8 +44,8 @@ Mai Score 是一個完全靜態網站，用於搜尋 **maimai 國際版**歌曲�
 |---|---|
 | `index.html` | 完整單檔應用程式：HTML、CSS、JavaScript 與內嵌資料集 |
 | `maidata.js` | 獨立 JavaScript 資料集，作為內嵌資料來源 |
-| `.scripts/refresh-data.mjs` | 下載並重新產生 ArcadeSongs maimai 資料集 |
-| `.scripts/verify-refresh.mjs` | 驗證產生的資料集與內嵌 HTML 版本 |
+| `.scripts/refresh-data.mjs` | 下載並重新產生 ArcadeSongs maimai 與 CHUNITHM 資料集 |
+| `.scripts/verify-refresh.mjs` | 驗證兩款遊戲的資料集與內嵌 HTML 版本 |
 | `.github/workflows/refresh-data.yml` | 每日自動更新資料集的 GitHub Actions 工作流程 |
 | `README.md` | 繁體中文主要技術與使用說明文件 |
 | `README.en.md` | 英文技術與使用說明文件 |
@@ -322,15 +322,17 @@ https://eric-is-here.github.io/Mai-Score/
 
 ## 自動資料更新
 
-資料集透過 `Refresh song data` GitHub Actions 工作流程更新：
+`Refresh song data` GitHub Actions 工作流程會檢查兩款遊戲的資料更新：
 
 1. 每天香港時間 `10:00`（`02:00 UTC`）執行
-2. 下載最新的 ArcadeSongs maimai 國際版資料集
+2. 下載 ArcadeSongs 的最新 maimai 與 CHUNITHM 資料
 3. 篩選國際版歌曲與譜面
-4. 重新產生 `index.html` 內嵌資料集，以及 `maidata.js` 獨立副本
+4. 重新產生每款遊戲的內嵌資料集與獨立 JavaScript 副本
 5. 驗證資料集 metadata、譜面類型、內嵌／獨立資料一致性與內嵌 JavaScript 語法
-6. 只有資料變更時，才提交並推送 `index.html` 與 `maidata.js`
-7. 推送到 `main` 後觸發新的 GitHub Pages 部署
+6. 只有資料變更時，才提交並推送產生的檔案
+7. 若更新的分支是 Pages 來源，便要求 GitHub Pages 建置網站
+
+排程工作流程從 GitHub 預設分支執行。將同一個分支設為 Pages 來源，排程更新便可發布到網站。網站顯示 ArcadeSongs 的資料時間，只有來源發布新資料時才會改變。
 
 你也可以在儲存庫的 **Actions** 頁面，使用 `workflow_dispatch` 手動執行工作流程。
 

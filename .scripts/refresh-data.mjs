@@ -8,6 +8,13 @@ const datasets = [
     standalone: "maidata.js",
     source: "https://arcade-songs.zetaraku.dev/maimai/",
   },
+  {
+    url: "https://dp4p6x0xfi5o9.cloudfront.net/chunithm/data.json",
+    variable: "chunithmdata",
+    html: "chunithm.html",
+    standalone: "chunithmdata.js",
+    source: "https://arcade-songs.zetaraku.dev/chunithm/",
+  },
 ];
 
 function filterInternational(raw) {
@@ -85,6 +92,7 @@ for (const dataset of datasets) {
   console.log(`Refreshing ${dataset.variable} from ${dataset.url}`);
   const raw = await fetchJson(dataset.url);
   if (!Array.isArray(raw.songs)) throw new Error(`${dataset.url} returned no song array`);
+  if (Number.isNaN(Date.parse(raw.updateTime))) throw new Error(`${dataset.url} returned an invalid update time`);
 
   const songs = filterInternational(raw);
   if (songs.length === 0) throw new Error(`${dataset.url} returned no international songs`);
@@ -101,5 +109,5 @@ for (const dataset of datasets) {
   fs.writeFileSync(dataset.html, replaceEmbeddedDataset(source, dataset.variable, datasetJson), "utf8");
 
   const charts = songs.reduce((total, song) => total + song.sheets.length, 0);
-  console.log(`${dataset.variable}: ${songs.length} songs, ${charts} charts`);
+  console.log(`${dataset.variable}: ${songs.length} songs, ${charts} charts, source updated ${filtered.updateTime}`);
 }

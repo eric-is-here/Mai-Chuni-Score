@@ -9,6 +9,14 @@ const datasets = [
     chartTypes: ["std", "dx", "utage"],
     logic: "const diffNames",
   },
+  {
+    file: "chunithmdata.js",
+    variable: "chunithmdata",
+    html: "chunithm.html",
+    source: "https://arcade-songs.zetaraku.dev/chunithm/",
+    chartTypes: ["std", "we"],
+    logic: "const diffNames",
+  },
 ];
 
 for (const dataset of datasets) {

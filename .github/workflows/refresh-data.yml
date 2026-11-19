@@ -11,24 +11,42 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: write
+      pages: write
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 22
-          cache: ""
+          node-version: '24'
+          check-latest: true
+          package-manager-cache: false
+
+      - name: Require patched Node.js
+        run: |
+          node -v
+          node <<'NODE'
+          // https://nodejs.org/en/blog/release/v24.22.1
+          const version = process.versions.node;
+          const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version);
+          const [major, minor, patch] = match ? match.slice(1).map(Number) : [];
+          if (major !== 24 || minor < 22 || (minor === 22 && patch < 1)) {
+            console.error(`::error::Node.js 24.22.1 or newer 24.x is required for CVE-2026-111497; found ${version}.`);
+            process.exit(1);
+          }
+          console.log(`Node.js ${version} meets the patched 24.x requirement.`);
+          NODE
 
       - name: Regenerate datasets
         run: node .scripts/refresh-data.mjs
 
       - name: Validate generated files
-        run: node .scripts/verify-refresh.mjs
+        run: node .scripts/verify-complete.mjs
 
       - name: Push if changed
+        id: push
         run: |
           if git diff --quiet; then
             echo "Dataset is already current."
@@ -37,7 +55,18 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html maidata.js
+          git add index.html maidata.js chunithm.html chunithmdata.js
           git commit -m "Refresh ArcadeSongs datasets"
           git pull --rebase
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Request Pages build
+        if: steps.push.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pages_branch=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.source.branch')
+          if [ "$GITHUB_REF_NAME" = "$pages_branch" ]; then
+            gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"
+          fi
