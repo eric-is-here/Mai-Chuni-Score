@@ -42,14 +42,16 @@ const datasetJson = JSON.stringify(dataset).replaceAll("</script", "<\\/script")
 fs.writeFileSync("chunithmdata.js", `const chunithmdata = ${datasetJson};\n`, "utf8");
 
 const source = fs.readFileSync("index.html", "utf8");
-const lines = source.split(/\r?\n/);
-let head = lines.slice(0, 11).join("\n") + "\n" + lines.slice(15, 36).join("\n");
+const headEnd = source.indexOf("</head>");
+const bodyStart = source.indexOf("<body>", headEnd);
+const bodyEnd = source.indexOf("<script", bodyStart);
+let head = source.slice(0, headEnd).trimEnd();
 const switchStyle = `header{position:relative}
 .game-switch{position:absolute;top:0;right:0;display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border:1px solid rgba(243,166,7,.45);border-radius:999px;background:rgba(243,166,7,.12);color:#fbd38d;font:inherit;font-size:13px;font-weight:800;text-decoration:none;cursor:pointer}
 .game-switch:hover{background:rgba(243,166,7,.22);color:#fff}
 @media(max-width:560px){.game-switch{position:static;margin-top:12px}}`;
-let body = lines.slice(37, 47).join("\n");
-const logicStart = source.indexOf("const diffNames=");
+let body = source.slice(bodyStart, bodyEnd).trimEnd();
+const logicStart = source.indexOf("const diffNames=", bodyEnd);
 const scriptEnd = source.indexOf("</script>", logicStart);
 let logic = source.slice(logicStart, scriptEnd);
 

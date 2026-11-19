@@ -191,8 +191,8 @@ https://dp4p6x0xfi5o9.cloudfront.net/maimai/img/cover/{imageName}
 navigator.mediaDevices.getUserMedia({
   video: {
     facingMode: "environment",
-    width: { ideal: 1280 },
-    height: { ideal: 720 }
+    width: { ideal: 960 },
+    height: { ideal: 540 }
   }
 });
 ```
@@ -200,9 +200,9 @@ navigator.mediaDevices.getUserMedia({
 掃描器會：
 
 1. 優先開啟後置／環境鏡頭
-2. 持續將視訊畫面擷取到離屏 canvas
-3. 不關閉鏡頭，重複執行 OCR
-4. 分析兩個聚焦歌名的淺色寬裁切區域
+2. 顯示虛線框，方便將完整歌名對準框內
+3. 只將框內的視訊畫面擷取到離屏 canvas
+4. 鏡頭開啟期間，每次擷取執行一次 OCR
 5. 將辨識文字與歌曲資料庫比對
 6. 在鏡頭下方顯示最佳符合結果
 7. 先顯示 Standard 譜面等級，再顯示 DX 譜面等級
@@ -218,7 +218,7 @@ navigator.mediaDevices.getUserMedia({
 
 1. 接受拍攝照片或螢幕截圖
 2. 建立 `ImageBitmap`
-3. 執行相同的兩個歌名裁切 OCR 流程
+3. 辨識最多兩個以歌名為主的裁切區域
 4. 顯示最多五個候選歌曲
 5. 讓使用者選擇正確結果
 
@@ -236,7 +236,7 @@ OCR 使用 Tesseract.js：
 jpn+eng
 ```
 
-即時掃描會在掃描期間保留一個持續存在的 Tesseract worker，並在掃描器關閉時終止它。畫面以 `960×540` 擷取，OCR 前先裁切至歌名區域；若已得到高信心歌名符合，辨識會提前結束。
+即時掃描會在掃描期間重複使用同一個 Tesseract worker，並在掃描器關閉時終止它。掃描框位於預覽中央，佔預覽寬度的 72% 和高度的 20%。即使鏡頭與預覽的長寬比不同，裁切範圍仍與虛線框一致。
 
 ### 文字正規化
 

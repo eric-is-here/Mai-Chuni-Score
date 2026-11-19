@@ -191,8 +191,8 @@ Live OCR uses:
 navigator.mediaDevices.getUserMedia({
   video: {
     facingMode: "environment",
-    width: { ideal: 1280 },
-    height: { ideal: 720 }
+    width: { ideal: 960 },
+    height: { ideal: 540 }
   }
 });
 ```
@@ -200,9 +200,9 @@ navigator.mediaDevices.getUserMedia({
 The scanner:
 
 1. Opens a rear/environment camera when available
-2. Continuously captures video frames to an offscreen canvas
-3. Runs OCR repeatedly without closing the camera
-4. Analyzes two shallow, wide crop regions focused on song titles
+2. Shows a dashed box to help you frame the full song title
+3. Captures only the area inside the box to an offscreen canvas
+4. Runs one OCR pass per capture while the camera is open
 5. Matches recognized text against the song database
 6. Shows the best match as an inline card under the camera
 7. Shows Standard chart levels first and DX chart levels beneath them
@@ -218,7 +218,7 @@ It:
 
 1. Accepts a captured photo or screenshot
 2. Creates an `ImageBitmap`
-3. Runs the same two-crop title-focused OCR pipeline
+3. Checks up to two title-focused crops
 4. Shows up to five candidate songs
 5. Lets the user select the intended match
 
@@ -236,7 +236,7 @@ Recognition languages:
 jpn+eng
 ```
 
-The live scanner keeps one persistent Tesseract worker while scanning and terminates it when the scanner closes. Frames are captured at `960×540`, cropped to title regions before OCR, and recognition exits early after a high-confidence title match.
+The live scanner keeps one persistent Tesseract worker while scanning and terminates it when the scanner closes. The scan box covers the center 72% of the preview width and 20% of its height. The crop follows the box even when the camera and preview have different aspect ratios.
 
 ### Text Normalization
 
